@@ -11,16 +11,44 @@ class srStats {
   /**
     * calculates a list of trending items
     *
+    * To use, assign an array of items $this->items in the originating code.
+    * The function will calculate the trend and return a sorted array to 
+    * $this->trend.
+    *
+    * Usage example:
+    *
+    * $post_stats = new srStats();
+    * 
+    * foreach ($posts as $post) {
+    *   $post_stats->items['id'] = $post['id'];  
+    *   $post_stats->items['date'] = $post['date'];
+    * }
+    * 
+    * $post_stats->build_trend;
+    *
+    * forech($post_stats->trend as $id => $score) {
+    *   print($posts[$id]['name'] " . " : $score");
+    * }
+    *
+    *
+    * @param int $this->items['id'] 
+    *   The ID of the post
+    * @param int $this->items['date']
+    *   The date of the post as a UNIX time stamp
+    * @return array
+    *   Returns an array of IDs sorted by score
     */
     
-  public function trend() {
+  public function build_trend() {
   
     $this->trend = array();
   
     foreach ($this->items as $item) {
       $score = $this->calc_score($item['score'], $item['date'], $this->gravity);
-      $this->trend[$item['id']]['score'] = $score;
+      $this->trend[$item['id']] = $score;
     }
+    
+    natsort($this->trend);
   
   }
   
